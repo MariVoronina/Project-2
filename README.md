@@ -13,5 +13,5 @@
 
 # Команда
 - [Арина Вычегжанина](https://github.com/ArinaVychegzhanina)
-- 
+
 - [Мария Воронина](https://github.com/MariVoronina)
