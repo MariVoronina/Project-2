@@ -12,5 +12,6 @@
 - Реализовать интерфес нашего приложения
 
 # Команда
--[Арина Вычегжанина](https://github.com/ArinaVychegzhanina)
--[Мария Воронина](https://github.com/MariVoronina)
+- [Арина Вычегжанина](https://github.com/ArinaVychegzhanina)
+- 
+- [Мария Воронина](https://github.com/MariVoronina)
