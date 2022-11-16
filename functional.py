@@ -126,8 +126,9 @@ def find_variants(square: str, address: str, price: str, electricity: str, heati
 
 
 def info(dat):
+  li = []
     for i, row in dat.iterrows():
-        print(f"Cottage ID: {row['Cottage ID']} \n" +
+        li.append(f"Cottage ID: {row['Cottage ID']} \n" +
               f"Cottage square: {row['Cottage square']} \n" +
               f"Number of rooms: {row['Number of rooms']} \n" +
               f"Number of floors: {row['Number of floors']} \n" +
@@ -138,6 +139,7 @@ def info(dat):
               f"Heating: {row['Heating']} \n" +
               f"Sewerage: {row['Sewerage']} \n" +
               f"Water Supplying: {row['Water supplying']} \n")
+    return li    
 
 
 def optimal_meter(res):
