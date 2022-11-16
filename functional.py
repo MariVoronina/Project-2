@@ -75,7 +75,7 @@ class CottageProvider(BaseProvider):
         cottage.address = self.random_element(self.ADDRESSES)
         cottage.rooms = self.random_int(10, 25)
         cottage.price = self.random_int(10000000, 200000000)
-        cottage.floors = self.random_int(2, 4)
+        cottage.floors = self.random_int(1, 3)
         cottage.year = self.random_int(2015, 2022)
         cottage.electricity = self.random_element(self.ELECTRICITY)
         cottage.heating = self.random_element(self.HEATING)
