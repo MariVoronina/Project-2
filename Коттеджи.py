@@ -151,10 +151,7 @@ def info(dat):
     return li
 
 
-def optimal_meter(res):
-    op = res.assign(Price_of_meter=round(res["Cottage price"] / res['Cottage square'], 2))
-    m = op["Price_of_meter"].idxmin()
-    return res.loc[[m]]
+
 
 
 def optimal_dg(n: float, m: float, res):
@@ -179,34 +176,60 @@ print(type(info(find_variants("150-200", "'Березки. River Village', Мо�
 def clicked1():
     linfo = info(find_variants(var1.get(), var2.get(), var3.get(), var4.get(), var5.get(), var6.get()))
     wind = tk.Tk()  # создаем окно
-    wind.title('Information about cottages')  # задаем название окна
-    wind.geometry('800x750')  # задаем размер окна
+    wind.title('Информация о коттеджах')  # задаем название окна
+    wind.geometry('1000x700')  # задаем размер окна
     wind.configure(bg='linen')  # задаем цвет фона
+    container = ttk.Frame(wind, width= 1000, height=700)
+    canvas = Canvas(container, width= 800, height=700)
+    scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+    scrollable_frame = ttk.Frame(canvas, width= 1000, height=700)
+    #функция, вызывающаяся всякий раз, когда изменяется содержимое прокручиваемого фрейма
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
     for i in range(len(linfo)):
-        ttk.Label(wind,
+        ttk.Label(scrollable_frame,
                   text=linfo[i] + "\n" + "\n",
                   wraplength=800, justify="center", background='linen', foreground="maroon",
                   font=("Times New Roman", 20)).grid(row=i, column=1)
-        ttk.Label(wind,
+        ttk.Label(scrollable_frame,
                   text="картинка" + "\n" + "\n",
                   wraplength=800, justify="center", background='linen', foreground="maroon",
                   font=("Times New Roman", 20)).grid(row=i, column=0)
-    
+
+    container.pack()
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
 
     wind.mainloop()
 
 def select():
-    sel = "Наша хрень = " + v.get()
+    winds = tk.Tk()  # создаем окно
+    winds.title('Оптимальный вариант')  # задаем название окна
+    winds.geometry('800x500')  # задаем размер окна
+    winds.configure(bg='linen')  # задаем цвет фона
     n12 = float(str(v.get()))
     m12 = 1 - n12
     result = info(optimal_dg(n12, m12, find_variants(var1.get(), var2.get(), var3.get(), var4.get(), var5.get(), var6.get())))
-    return result
+    ttk.Label(winds,
+              text=result[0],
+              wraplength=800, justify="center", background='linen', foreground="maroon",
+              font=("Times New Roman", 20)).grid(row=0, column=0)
+    winds.mainloop()
+
+
 
 
 
 window = tk.Tk()
 window.title('Cottage')
-window.geometry('900x750')
+window.geometry('1000x750')
 style = Style()
 style.theme_use('default')
 style.configure('TNotebook.Tab', background="linen", font=('URW Gothic L','25','bold')) # неактивная вкладка окна будет цвета linen
@@ -215,69 +238,69 @@ style.configure('TNotebook.Tab', background="linen", font=('URW Gothic L','25','
 note = Notebook(window) # создаем виджет Notebook
 frame1 = Frame(note, width= 1000, height=700) # добавляем рамку для первой вкладки
 frame1.configure(background="linen")
-note.add(frame1, text= 'Find home') # добавляем имя вкладки
+note.add(frame1, text= 'Выбор дома') # добавляем имя вкладки
 
 # frame1
-ttk.Label(frame1, text = "Choose the sqr:", font = ("Times New Roman", 25), background = 'linen', foreground ="sienna").grid(column = 0,
+ttk.Label(frame1, text = "Площадь:", font = ("Times New Roman", 25), background = 'linen', foreground ="mediumslateblue").grid(column = 0,
 		row = 1, padx = 10, pady = 25) # создаем виджет для отображения текста
 v1 = StringVar() # переменная, содержащая строковые данные
-var1 = ttk.Combobox(frame1, width = 20, textvariable = v1, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем страну
-var1['values'] = sqr_list # в качестве сроковых данных используем список стран
+var1 = ttk.Combobox(frame1, width = 20, textvariable = v1, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем площадь
+var1['values'] = sqr_list
 var1.grid(column = 1, row = 1) # расположение в окне
 var1.current()
 
 
-ttk.Label(frame1, text = "Choose the address:", font = ("Times New Roman", 25), background = 'linen',foreground ="sienna").grid(column = 0,
+ttk.Label(frame1, text = "Адрес:", font = ("Times New Roman", 25), background = 'linen',foreground ="mediumslateblue").grid(column = 0,
 		row = 2, padx = 10, pady = 25)
 v2 = StringVar()
-var2 = ttk.Combobox(frame1, width = 20, textvariable = v2, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем тип
-var2['values'] = address_list # в качестве сроковых данных используем список типов компаний
+var2 = ttk.Combobox(frame1, width = 20, textvariable = v2, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем адрес
+var2['values'] = address_list # в качестве сроковых данных используем список адресов
 var2.grid(column = 1, row = 2)
 var2.current()
 
 
-ttk.Label(frame1, text = "Choose the price:", font = ("Times New Roman", 25), background = 'linen',foreground ="sienna").grid(column = 0,
+ttk.Label(frame1, text = "Цена:", font = ("Times New Roman", 25), background = 'linen',foreground ="mediumslateblue").grid(column = 0,
 		row = 3, padx = 10, pady = 25)
 v3 = StringVar()
-var3 = ttk.Combobox(frame1, width = 20, textvariable = v3, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем тип
-var3['values'] = price_list # в качестве сроковых данных используем список типов компаний
+var3 = ttk.Combobox(frame1, width = 20, textvariable = v3, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем цену
+var3['values'] = price_list # в качестве сроковых данных используем список цен
 var3.grid(column = 1, row = 3)
 var3.current()
 
-ttk.Label(frame1, text = "Choose the electricity:", font = ("Times New Roman", 25), background = 'linen',foreground ="sienna").grid(column = 0,
+ttk.Label(frame1, text = "Электричество:", font = ("Times New Roman", 25), background = 'linen',foreground ="mediumslateblue").grid(column = 0,
 		row = 4, padx = 10, pady = 25)
 v4 = StringVar()
-var4 = ttk.Combobox(frame1, width = 20, textvariable = v4, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем тип
-var4['values'] = elec_list # в качестве сроковых данных используем список типов компаний
+var4 = ttk.Combobox(frame1, width = 20, textvariable = v4, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем наличие электричества
+var4['values'] = elec_list # в качестве сроковых данных используем список да/нет
 var4.grid(column = 1, row = 4)
 var4.current()
 
-ttk.Label(frame1, text = "Choose the heat:", font = ("Times New Roman", 25), background = 'linen',foreground ="sienna").grid(column = 0,
+ttk.Label(frame1, text = "Отопление:", font = ("Times New Roman", 25), background = 'linen',foreground ="mediumslateblue").grid(column = 0,
 		row = 5, padx = 10, pady = 25)
 v5 = StringVar()
-var5 = ttk.Combobox(frame1, width = 20, textvariable = v5, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем тип
-var5['values'] = heat_list # в качестве сроковых данных используем список типов компаний
+var5 = ttk.Combobox(frame1, width = 20, textvariable = v5, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем отопление
+var5['values'] = heat_list # в качестве сроковых данных используем список типов отопления
 var5.grid(column = 1, row = 5)
 var5.current()
 
-ttk.Label(frame1, text = "Choose the ws:", font = ("Times New Roman", 25), background = 'linen',foreground ="sienna").grid(column = 0,
+ttk.Label(frame1, text = "Водоснабжение:", font = ("Times New Roman", 25), background = 'linen',foreground ="mediumslateblue").grid(column = 0,
 		row = 6, padx = 10, pady = 25)
 v6 = StringVar()
-var6 = ttk.Combobox(frame1, width = 20, textvariable = v6, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем тип
-var6['values'] = ws_list # в качестве сроковых данных используем список типов компаний
+var6 = ttk.Combobox(frame1, width = 20, textvariable = v6, font=("Times New Roman", 20)) # выпадающий список, в котором выбираем наличие водоснабжения
+var6['values'] = ws_list # в качестве сроковых данных используем список да/нет
 var6.grid(column = 1, row = 6)
 var6.current()
 
-button1 = Button(frame1, text="Draw a graph", font = ("Times New Roman", 25),
-                 background="sienna", foreground ='linen', command=clicked1).grid(column = 1, row =7) #кнопка для построения графика по введенным данным
+button1 = Button(frame1, text="Вывести информацию", font = ("Times New Roman", 25),
+                 background="mediumslateblue", foreground ='linen', command=clicked1).grid(column = 1, row =7) #кнопка для построения вывода информации
 
 
 v = StringVar()
 scale = Scale(frame1, variable=v, from_=0.1, to=0.9, resolution = 0.1, orient=HORIZONTAL, activebackground = "cyan", highlightbackground= "mediumslateblue").grid(column = 0, row =8)
 
 
-btn = Button(frame1, text="Вычислить",font = ("Times New Roman", 25), background="sienna", foreground ='linen', command=select).grid(column = 1, row =8)
-
+btn = Button(frame1, text="Выбрать оптимальный",font = ("Times New Roman", 25), background="mediumslateblue", foreground ='linen', command=select).grid(column = 1, row =8)
+#кнопка для выбора оптимального
 note.pack(expand= True, fill=BOTH)
 window.mainloop()
 
