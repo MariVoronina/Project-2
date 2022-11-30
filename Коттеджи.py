@@ -137,17 +137,17 @@ def find_variants(square: str, address: str, price: str, electricity: str, heati
 def info(dat):
     li = []
     for i, row in dat.iterrows():
-       li.append(f"Cottage ID: {row['Cottage ID']} \n" +
-              f"Cottage square: {row['Cottage square']} \n" +
-              f"Number of rooms: {row['Number of rooms']} \n" +
-              f"Number of floors: {row['Number of floors']} \n" +
-              f"Year of building: {row['Year of building']} \n" +
-              f"Address: {row['Cottage address']} \n" +
-              f"Price: {row['Cottage price']} \n" +
-              f"Electricity: {row['Electricity']} \n" +
-              f"Heating: {row['Heating']} \n" +
-              f"Sewerage: {row['Sewerage']} \n" +
-              f"Water Supplying: {row['Water supplying']} \n")
+       li.append(f"ID коттеджа: {row['Cottage ID']} \n" +
+              f"Площадь: {row['Cottage square']} \n" +
+              f"Количество комнат: {row['Number of rooms']} \n" +
+              f"Количество этажей: {row['Number of floors']} \n" +
+              f"Год постройки: {row['Year of building']} \n" +
+              f"Адрес: {row['Cottage address']} \n" +
+              f"Цена: {row['Cottage price']} \n" +
+              f"Электричество: {row['Electricity']} \n" +
+              f"Отопление: {row['Heating']} \n" +
+              f"Наличие канализации: {row['Sewerage']} \n" +
+              f"Водоснабжение: {row['Water supplying']} \n")
     return li
 
 
@@ -186,19 +186,27 @@ def clicked1():
         ttk.Label(wind,
                   text=linfo[i] + "\n" + "\n",
                   wraplength=800, justify="center", background='linen', foreground="maroon",
+                  font=("Times New Roman", 20)).grid(row=i, column=1)
+        ttk.Label(wind,
+                  text="картинка" + "\n" + "\n",
+                  wraplength=800, justify="center", background='linen', foreground="maroon",
                   font=("Times New Roman", 20)).grid(row=i, column=0)
     
 
     wind.mainloop()
 
-
-
+def select():
+    sel = "Наша хрень = " + v.get()
+    n12 = float(str(v.get()))
+    m12 = 1 - n12
+    result = info(optimal_dg(n12, m12, find_variants(var1.get(), var2.get(), var3.get(), var4.get(), var5.get(), var6.get())))
+    return result
 
 
 
 window = tk.Tk()
 window.title('Cottage')
-window.geometry('900x650')
+window.geometry('900x750')
 style = Style()
 style.theme_use('default')
 style.configure('TNotebook.Tab', background="linen", font=('URW Gothic L','25','bold')) # неактивная вкладка окна будет цвета linen
@@ -263,8 +271,16 @@ var6.current()
 button1 = Button(frame1, text="Draw a graph", font = ("Times New Roman", 25),
                  background="sienna", foreground ='linen', command=clicked1).grid(column = 1, row =7) #кнопка для построения графика по введенным данным
 
-button11 = Button(frame1, text="Information about companies",font = ("Times New Roman", 25), background="sienna", foreground ='linen',
-                  command=clicked1).grid(column = 1, row =8) #кнопка для получения информации о компаниях
+
+v = StringVar()
+scale = Scale(frame1, variable=v, from_=0.1, to=0.9, resolution = 0.1, orient=HORIZONTAL, activebackground = "cyan", highlightbackground= "mediumslateblue").grid(column = 0, row =8)
+
+
+btn = Button(frame1, text="Вычислить",font = ("Times New Roman", 25), background="sienna", foreground ='linen', command=select).grid(column = 1, row =8)
 
 note.pack(expand= True, fill=BOTH)
 window.mainloop()
+
+
+
+print(select())
