@@ -1,6 +1,7 @@
 from faker import Faker # библиотека для создания фейковых данных
 from faker.providers import BaseProvider # абстрактный класс для написания провайдера
 import pandas as pd # модуль для работы с таблицами
+import json # модуль для работы с файлами формата json
 
 import tkinter as tk # библиотека для работы с оконным приложением
 from tkinter import *
@@ -161,6 +162,10 @@ def info(dat):
 def optimal_dg(n: float, m: float, res):
     op = res.assign(Deviation=n*(res["Cottage square"].max() - res["Cottage square"]) +
                               m*(res["Cottage price"] - res["Cottage price"].min()))
+    t = op.to_json(orient='index')
+    file_name = 'Results.json'
+    with open(file_name, 'w+') as f:
+        json.dump(t, f)
     m = op["Deviation"].idxmin()
     return res.loc[[m]]
 
