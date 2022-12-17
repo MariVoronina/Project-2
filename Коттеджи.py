@@ -1,7 +1,8 @@
 from faker import Faker
 from faker.providers import BaseProvider
+from tkinter import messagebox
 import pandas as pd
-
+from PIL import ImageTk, Image
 import tkinter as tk # библиотека для работы с оконным приложением
 from tkinter import *
 from tkinter import ttk # модуль, содержащий классы виджетов и методы для изменения их внешнего вида
@@ -174,40 +175,45 @@ print(type(info(find_variants("150-200", "'Березки. River Village', Мо�
 
 # функция, выводящая список коттеджей, удовлетворяющих запрос
 def clicked1():
-    linfo = info(find_variants(var1.get(), var2.get(), var3.get(), var4.get(), var5.get(), var6.get()))
-    wind = tk.Tk()  # создаем окно
-    wind.title('Информация о коттеджах')  # задаем название окна
-    wind.geometry('1000x700')  # задаем размер окна
-    wind.configure(bg='linen')  # задаем цвет фона
-    container = ttk.Frame(wind, width= 1000, height=700)
-    canvas = Canvas(container, width= 800, height=700)
-    scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
-    scrollable_frame = ttk.Frame(canvas, width= 1000, height=700)
-    #функция, вызывающаяся всякий раз, когда изменяется содержимое прокручиваемого фрейма
-    scrollable_frame.bind(
-        "<Configure>",
-        lambda e: canvas.configure(
-            scrollregion=canvas.bbox("all")
+    #проверяем, заполнены ли все ячейки и выводим сообщение об ошибке в противном случае
+    if var1.get() == '' or var2.get() == '' or var3.get() == '' or var4.get() == '' or var5.get() == '' or var6.get() == '':
+        messagebox.showinfo('Ошибка', 'Заполните все ячейки!')
+    else:
+        linfo = info(find_variants(var1.get(), var2.get(), var3.get(), var4.get(), var5.get(), var6.get()))
+        wind = tk.Tk()  # создаем окно
+        wind.title('Информация о коттеджах')  # задаем название окна
+        wind.geometry('1000x700')  # задаем размер окна
+        wind.configure(bg='linen')  # задаем цвет фона
+        container = ttk.Frame(wind, width=1000, height=700)
+        canvas = Canvas(container, width=800, height=700)
+        scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+        scrollable_frame = ttk.Frame(canvas, width=1000, height=700)
+        img = PhotoImage(master=canvas, file='этаж1.png')  # картинка
+        # функция, вызывающаяся всякий раз, когда изменяется содержимое прокручиваемого фрейма
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
         )
-    )
 
-    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-    canvas.configure(yscrollcommand=scrollbar.set)
-    for i in range(len(linfo)):
-        ttk.Label(scrollable_frame,
-                  text=linfo[i] + "\n" + "\n",
-                  wraplength=800, justify="center", background='linen', foreground="maroon",
-                  font=("Times New Roman", 20)).grid(row=i, column=1)
-        ttk.Label(scrollable_frame,
-                  text="картинка" + "\n" + "\n",
-                  wraplength=800, justify="center", background='linen', foreground="maroon",
-                  font=("Times New Roman", 20)).grid(row=i, column=0)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set, background='linen')
 
-    container.pack()
-    canvas.pack(side="left", fill="both", expand=True)
-    scrollbar.pack(side="right", fill="y")
+        for i in range(len(linfo)):
+            ttk.Label(scrollable_frame, image=img).grid(row=i, column=0)
+            ttk.Label(scrollable_frame,
+                      text=linfo[i],
+                      wraplength=600, justify="left", background='linen', foreground="maroon",
+                      font=("Times New Roman", 20)).grid(row=i, column=1, padx=(15, 0))
 
-    wind.mainloop()
+        container.pack()
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        wind.mainloop()
+
+
 
 def select():
     winds = tk.Tk()  # создаем окно
@@ -222,8 +228,6 @@ def select():
               wraplength=800, justify="center", background='linen', foreground="maroon",
               font=("Times New Roman", 20)).grid(row=0, column=0)
     winds.mainloop()
-
-
 
 
 
@@ -306,4 +310,3 @@ window.mainloop()
 
 
 
-print(select())
