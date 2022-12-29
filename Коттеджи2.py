@@ -1,8 +1,6 @@
 from faker import Faker # библиотека для создания фейковых данных
 from faker.providers import BaseProvider # абстрактный класс для написания провайдера
-import pandas as pd # модуль для работы с таблицами
 import json
-
 import tkinter as tk # библиотека для работы с оконным приложением
 from tkinter import *
 from tkinter import ttk # модуль, содержащий классы виджетов и методы для изменения их внешнего вида
