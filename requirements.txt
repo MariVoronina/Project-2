@@ -1,0 +1,8 @@
+Faker==15.1.1
+BaseProvider
+pandas==1.5.1
+json
+tkinter
+ttk
+Notebook
+Style
