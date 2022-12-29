@@ -3,6 +3,7 @@ BaseProvider
 pandas==1.5.1
 json
 tkinter
+tkinter *
 ttk
 Notebook
 Style
